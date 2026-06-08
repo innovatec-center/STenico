@@ -1,4 +1,7 @@
+import subprocess
+import sys
 import tkinter as tk
+from pathlib import Path
 from tkinter import ttk, messagebox
 
 # -----------------------------
@@ -9,6 +12,19 @@ clave = "123456"
 contador = 0
 
 
+
+def comprobar_clave(archivo,usuario, clave):
+    accesos = {}
+
+    with open (archivo,"r",encoding="utf-8") as archivo:
+        for linea in archivo:
+            palabras = linea.split()
+            accesos[palabras[0]]=palabras[1]
+
+    if clave == accesos.get(usuario):
+        return True
+    else:
+        return False
 # -----------------------------
 # Función acceder
 # -----------------------------
@@ -18,10 +34,13 @@ def acceder():
     usuario_ingresado = txt_usuario.get()
     clave_ingresada = txt_clave.get()
 
-    if usuario == usuario_ingresado and clave == clave_ingresada:
+    estado = comprobar_clave("usuarios.txt",usuario_ingresado,clave_ingresada)
+
+    if estado:
         messagebox.showinfo("Acceso correcto", "Puede ingresar al sistema")
+        ruta_dashboard = Path(__file__).with_name("dashboard.py")
+        subprocess.Popen([sys.executable, str(ruta_dashboard)])
         ventana.destroy()
-        import dashboard
 
     else:
         contador += 1

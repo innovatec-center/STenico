@@ -1,6 +1,8 @@
+import subprocess
+import sys
 import tkinter as lib
+from pathlib import Path
 from tkinter import ttk as lib2
-
 
 # ============================
 # VENTANA PRINCIPAL
@@ -9,6 +11,41 @@ ventana = lib.Tk()
 ventana.title("Sistema de Soporte Técnico - Registro de Clientes")
 ventana.resizable(False, False)
 ventana.configure(bg="#F3F4F6")
+
+def RegistrarCliente():
+    nombres  = txt_nombre.get()
+    apellidos = txt_apellido.get()
+    telefono = txt_telefono.get()
+    dni = txt_dni.get()
+    edad = txt_edad.get()
+    correo = txt_correo.get()
+    direccion = txt_direccion.get()
+    lista_elementos=[nombres, apellidos,telefono,dni, edad, correo,direccion]
+    
+    with open("users.txt","a",encoding="utf-8") as archivo:
+        print(lista_elementos)
+        archivo.write(f"{lista_elementos[0]} {lista_elementos[1]} {lista_elementos[2]} {lista_elementos[3]} {lista_elementos[4]} {lista_elementos[6]} {lista_elementos[5]}\n")
+        #{lista_elementos[2]} {lista_elementos[3]} {lista_elementos[4]}
+        # {lista_elementos[5]} {lista_elementos[6]}\n")
+    limpiarTabla()
+    cargarClientes()
+
+def limpiarTabla():
+    for elemento in lista.get_children():
+        lista.delete(elemento)
+
+
+
+
+
+
+def cerrar_ventana():
+    ruta_dashboard = Path(__file__).with_name("dashboard.py")
+    subprocess.Popen([sys.executable, str(ruta_dashboard)])
+    ventana.destroy()
+
+ventana.protocol("WM_DELETE_WINDOW", cerrar_ventana)
+
 
 
 # ============================
@@ -24,6 +61,7 @@ pos_x = int((ancho_pantalla / 2) - (ancho_ventana / 2))
 pos_y = int((alto_pantalla / 2) - (alto_ventana / 2))
 
 ventana.geometry(f"{ancho_ventana}x{alto_ventana}+{pos_x}+{pos_y}")
+
 
 
 # ============================
@@ -213,7 +251,8 @@ boton_registrar = lib2.Button(
     frame_botones,
     text="📁 REGISTRAR",
     width=18,
-    style="Boton.TButton"
+    style="Boton.TButton",
+    command=RegistrarCliente
 )
 boton_registrar.grid(column=0, row=0, padx=6, pady=5, sticky="ew")
 
@@ -308,21 +347,6 @@ for columna in columnas:
     lista.heading(columna, text=columna)
 
 
-# ============================
-# DATOS DE EJEMPLO
-# ============================
-lista.insert(
-    "",
-    "end",
-    values=("1", "Juan", "Ramos Pérez", "987654321", "76543210", "28", "Huaraz", "juan@gmail.com")
-)
-
-lista.insert(
-    "",
-    "end",
-    values=("2", "María", "Torres Luna", "912345678", "70123456", "32", "Independencia", "maria@gmail.com")
-)
-
 
 # ============================
 # PIE DE VENTANA
@@ -339,5 +363,16 @@ lbl_pie = lib.Label(
 )
 lbl_pie.pack(pady=5)
 
+def cargarClientes():
+    with open("users.txt", "r", encoding="utf-8") as documento:
+        for linea in documento:
+            numero = len(lista.get_children())+1
+            data = linea.split()
+            fila_nueva = [numero]
+            for objeto in data:
+                fila_nueva.append(objeto)
+            lista.insert("", lib.END, values=fila_nueva)
 
+
+cargarClientes()
 ventana.mainloop()

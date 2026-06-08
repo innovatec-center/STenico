@@ -1,20 +1,25 @@
+import subprocess
+import sys
 import tkinter as tk
+from pathlib import Path
 from tkinter import ttk, messagebox
 
 def buscar():
     print("Buscar")
 
-def clientes():
+def abrir_modulo(nombre_archivo):
+    ruta_modulo = Path(__file__).with_name(nombre_archivo)
+    subprocess.Popen([sys.executable, str(ruta_modulo)])
     ventana.destroy()
-    import cliente
+
+def clientes():
+    abrir_modulo("cliente.py")
 
 def equipos():
-    ventana.destroy()
-    import equipos
+    abrir_modulo("equipos.py")
 
 def servicios_tecnicos():
-    ventana.destroy()
-    import servicios
+    abrir_modulo("servicios.py")
 
 def reportes():
     print("Reportes")

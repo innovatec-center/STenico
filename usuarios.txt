@@ -1,0 +1,4 @@
+administrador 123456
+cliente huaraz
+vendedor 87654321
+admin wasdwdsaw

@@ -1,5 +1,9 @@
+import subprocess
+import sys
 import tkinter as tk
+from pathlib import Path
 from tkinter import ttk, messagebox
+
 
 # -----------------------------
 # Función para ingresar datos
@@ -38,6 +42,12 @@ ventana.geometry("560x520")
 ventana.resizable(False, False)
 ventana.configure(bg="#F4F6F9")
 
+def cerrar_ventana():
+    ruta_dashboard = Path(__file__).with_name("dashboard.py")
+    subprocess.Popen([sys.executable, str(ruta_dashboard)])
+    ventana.destroy()
+
+ventana.protocol("WM_DELETE_WINDOW", cerrar_ventana)
 
 # -----------------------------
 # Estilos ttk

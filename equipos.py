@@ -1,4 +1,7 @@
+import subprocess
+import sys
 import tkinter as tk
+from pathlib import Path
 from tkinter import ttk, messagebox
 
 
@@ -40,6 +43,12 @@ app.geometry(f"{ancho_ventana}x{alto_ventana}+{posicion_x}+{posicion_y}")
 app.resizable(False, False)
 app.configure(bg="#F3F4F6")
 
+def cerrar_ventana():
+    ruta_dashboard = Path(__file__).with_name("dashboard.py")
+    subprocess.Popen([sys.executable, str(ruta_dashboard)])
+    app.destroy()
+
+app.protocol("WM_DELETE_WINDOW", cerrar_ventana)
 
 # -----------------------------
 # Estilos
