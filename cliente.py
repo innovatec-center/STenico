@@ -9,7 +9,7 @@ from tkinter import ttk as lib2
 # ============================
 ventana = lib.Tk()
 ventana.title("Sistema de Soporte Técnico - Registro de Clientes")
-ventana.resizable(False, False)
+
 ventana.configure(bg="#F3F4F6")
 
 def RegistrarCliente():
@@ -42,20 +42,45 @@ def limpiarFormulario():
     txt_edad.delete(0, lib.END)
     txt_correo.delete(0, lib.END)
     txt_direccion.delete(0, lib.END)
+    txt_editar_usuario.delete(0, lib.END)
 
 def activarActualizar():
     estado = str(boton_registrar["state"])
-    limpiarFormulario()
+    
     if (estado == "disabled"):
         boton_registrar.config(state="normal")
         boton_eliminar.config(state="normal")
         boton_limpiar.config(state="normal")
 
+        
+        nombre=txt_nombre.get()
+        apellido=txt_apellido.get()
+        telefono=txt_telefono.get()
+        dni=txt_dni.get()
+        edad=txt_edad.get()
+        correo=txt_correo.get()
+        direccion=txt_direccion.get()
+        posicion=txt_editar_usuario.get()
+        posicion = int(posicion)-1
+
+        nuevos_datos = f"{nombre} {apellido} {telefono} {dni} {edad} {direccion} {correo} \n"
+
+        with open("users.txt","r",encoding="utf-8") as archivo:
+            lineas_leidas = archivo.readlines()
+        
+        lineas_leidas[posicion] = nuevos_datos
+
+        with open("users.txt","w",encoding="utf-8") as archivo:
+            archivo.writelines(lineas_leidas)
+        limpiarFormulario()
+        limpiarTabla()
+        cargarClientes()
+
     else:
         boton_registrar.config(state="disabled")
         boton_eliminar.config(state="disabled")
         boton_limpiar.config(state="disabled")
-
+        limpiarFormulario()
         valores_fila = lista.selection()
         for elemento in valores_fila:
             valor = lista.item(elemento,"values")
@@ -68,6 +93,7 @@ def activarActualizar():
             correo = valor[7]
             numero = valor[0]
 
+            txt_editar_usuario.insert(0,numero)
             txt_nombre.insert(0,nombre)
             txt_apellido.insert(0,apellido)
             txt_telefono.insert(0,telefono)
@@ -75,6 +101,7 @@ def activarActualizar():
             txt_edad.insert(0,edad)
             txt_correo.insert(0,correo)
             txt_direccion.insert(0,ciudad)
+    
 
 def cerrar_ventana():
     ruta_dashboard = Path(__file__).with_name("dashboard.py")
@@ -271,6 +298,8 @@ lbl_direccion.grid(column=0, row=3, sticky="w", padx=8, pady=5)
 
 txt_direccion = lib2.Entry(frame_formulario, width=75, style="Campo.TEntry")
 txt_direccion.grid(column=1, row=3, sticky="ew", padx=8, pady=5, columnspan=3)
+
+txt_editar_usuario = lib2.Entry(frame_formulario)
 
 
 # Ajustar columnas internas del formulario
