@@ -34,10 +34,47 @@ def limpiarTabla():
     for elemento in lista.get_children():
         lista.delete(elemento)
 
+def limpiarFormulario():
+    txt_nombre.delete(0, lib.END)
+    txt_apellido.delete(0, lib.END)
+    txt_telefono.delete(0, lib.END)
+    txt_dni.delete(0, lib.END)
+    txt_edad.delete(0, lib.END)
+    txt_correo.delete(0, lib.END)
+    txt_direccion.delete(0, lib.END)
 
+def activarActualizar():
+    estado = str(boton_registrar["state"])
+    limpiarFormulario()
+    if (estado == "disabled"):
+        boton_registrar.config(state="normal")
+        boton_eliminar.config(state="normal")
+        boton_limpiar.config(state="normal")
 
+    else:
+        boton_registrar.config(state="disabled")
+        boton_eliminar.config(state="disabled")
+        boton_limpiar.config(state="disabled")
 
+        valores_fila = lista.selection()
+        for elemento in valores_fila:
+            valor = lista.item(elemento,"values")
+            nombre = valor[1]
+            apellido = valor[2]
+            telefono = valor[3]
+            dni = valor[4]
+            edad = valor[5]
+            ciudad = valor[6]
+            correo = valor[7]
+            numero = valor[0]
 
+            txt_nombre.insert(0,nombre)
+            txt_apellido.insert(0,apellido)
+            txt_telefono.insert(0,telefono)
+            txt_dni.insert(0,dni)
+            txt_edad.insert(0,edad)
+            txt_correo.insert(0,correo)
+            txt_direccion.insert(0,ciudad)
 
 def cerrar_ventana():
     ruta_dashboard = Path(__file__).with_name("dashboard.py")
@@ -260,7 +297,8 @@ boton_actualizar = lib2.Button(
     frame_botones,
     text="✏️ ACTUALIZAR",
     width=18,
-    style="Boton.TButton"
+    style="Boton.TButton",
+    command=activarActualizar
 )
 boton_actualizar.grid(column=1, row=0, padx=6, pady=5, sticky="ew")
 
